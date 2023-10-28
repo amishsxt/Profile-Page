@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.amishprofilepage.Model.DataModel.User;
 import com.example.amishprofilepage.R;
 
 import java.util.List;
@@ -15,12 +16,12 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     private Context context;
-    private List<String> nameList;
+    private List<User> userList;
     private OnItemClickListener clickListener;
 
-    public UserAdapter(Context context, List<String> nameList, OnItemClickListener clickListener) {
+    public UserAdapter(Context context, List<User> userList, OnItemClickListener clickListener) {
         this.context = context;
-        this.nameList = nameList;
+        this.userList = userList;
         this.clickListener = clickListener;
     }
 
@@ -32,18 +33,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        holder.userName.setText(nameList.get(position));
+        //init views data
+        holder.userName.setText(userList.get(position).getName());
+        holder.followButton.setText(userList.get(position).isFollow() ? "Following" : "Follow");
 
         holder.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.followState){
-                    holder.unfollow();
-                    clickListener.onItemClick(false);
+                if(!userList.get(position).isFollow()){
+                    holder.follow();
+                    userList.get(position).setFollow(true);
+                    clickListener.onItemClick(true);
                 }
                 else{
-                    holder.follow();
-                    clickListener.onItemClick(true);
+                    holder.unfollow();
+                    userList.get(position).setFollow(false);
+                    clickListener.onItemClick(false);
                 }
             }
         });
@@ -51,7 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     @Override
     public int getItemCount() {
-        return nameList.size();
+        return userList.size();
     }
 
     public interface OnItemClickListener {

@@ -1,23 +1,22 @@
 package com.example.amishprofilepage.Views.Home;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.amishprofilepage.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.amishprofilepage.Model.DataModel.User;
 import com.example.amishprofilepage.Views.Home.Adapter.UserAdapter;
 import com.example.amishprofilepage.databinding.ActivityHomeBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding xml;
-    private List<String> nameList;
+    private List<User> userList = new ArrayList<>();
     private int followingCount;
 
     @Override
@@ -29,13 +28,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //init
         followingCount = Integer.parseInt(xml.followingCount.getText().toString());
-        nameList = Arrays.asList(
-                "Emma", "Liam", "Olivia", "Noah", "Ava", "Isabella", "Sophia", "Jackson", "Aiden", "Lucas",
-                "Oliver", "Caden", "Ethan", "Michael", "Elizabeth", "Mia", "Charlotte", "Abigail", "Camila", "Emily",
-                "Grace", "Madison", "Avery", "Sofia", "Scarlett", "James", "Benjamin", "Henry", "Alexander", "Sebastian",
-                "Elijah", "David", "William", "Joseph", "Matthew", "Samuel", "Daniel", "Jackson", "Logan", "Liam", "Mason",
-                "John", "David", "James", "Oliver", "Joseph", "Michael", "Thomas", "William"
-        );
+        addUsers();
 
         //vertical Recyclerview
         xml.profilesRecyclerView.setLayoutManager(
@@ -46,14 +39,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setAdapter(){
-        if(nameList!=null){
+        if(userList!=null){
 
-            UserAdapter userAdapter = new UserAdapter(this, nameList, new UserAdapter.OnItemClickListener() {
+            UserAdapter userAdapter = new UserAdapter(this, userList, new UserAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(boolean bool) {
+
                     if(bool){
                         followingCount++;
-
                     }
                     else{
                         followingCount--;
@@ -66,6 +59,20 @@ public class HomeActivity extends AppCompatActivity {
 
             xml.profilesRecyclerView.setAdapter(userAdapter);
             hideProgressBar();
+        }
+    }
+
+    private void addUsers(){
+        List<String> nameList = new ArrayList<>(List.of(
+                "Emma", "Liam", "Olivia", "Noah", "Ava", "Isabella", "Sophia", "Jackson", "Aiden", "Lucas",
+                "Oliver", "Caden", "Ethan", "Michael", "Elizabeth", "Mia", "Charlotte", "Abigail", "Camila", "Emily",
+                "Grace", "Madison", "Avery", "Sofia", "Scarlett", "James", "Benjamin", "Henry", "Alexander", "Sebastian",
+                "Elijah", "David", "William", "Joseph", "Matthew", "Samuel", "Daniel", "Jackson", "Logan", "Liam", "Mason",
+                "John", "David", "James", "Oliver", "Joseph", "Michael", "Thomas", "William"
+        ));
+
+        for (String name : nameList) {
+            userList.add(new User(name));
         }
     }
 

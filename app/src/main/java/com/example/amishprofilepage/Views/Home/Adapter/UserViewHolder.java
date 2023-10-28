@@ -13,7 +13,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
 
     TextView userName;
     Button followButton;
-    boolean followState = false;
 
     public UserViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -24,11 +23,9 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
 
     public void follow(){
         followButton.setText("Following");
-        followState = true;
     }
 
     public void unfollow(){
         followButton.setText("Follow");
-        followState = false;
     }
 }
