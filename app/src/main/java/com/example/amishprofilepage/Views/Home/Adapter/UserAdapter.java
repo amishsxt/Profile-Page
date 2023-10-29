@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.amishprofilepage.Model.DataModel.User;
+import com.example.amishprofilepage.Model.RoomDB.User;
 import com.example.amishprofilepage.R;
 
 import java.util.List;
@@ -43,12 +43,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
                 if(!userList.get(position).isFollow()){
                     holder.follow();
                     userList.get(position).setFollow(true);
-                    clickListener.onItemClick(true);
+                    clickListener.onItemClick(true, position);
                 }
                 else{
                     holder.unfollow();
                     userList.get(position).setFollow(false);
-                    clickListener.onItemClick(false);
+                    clickListener.onItemClick(false, position);
                 }
             }
         });
@@ -60,6 +60,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(boolean bool);
+        void onItemClick(boolean bool, int position);
     }
 }

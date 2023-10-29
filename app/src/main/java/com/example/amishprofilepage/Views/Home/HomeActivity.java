@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.amishprofilepage.Model.DataModel.User;
+import com.example.amishprofilepage.Model.RoomDB.User;
+import com.example.amishprofilepage.ViewModel.UserViewModel;
 import com.example.amishprofilepage.Views.Home.Adapter.UserAdapter;
 import com.example.amishprofilepage.databinding.ActivityHomeBinding;
 
@@ -18,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding xml;
     private List<User> userList = new ArrayList<>();
     private int followingCount;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(xml.getRoot());
 
         //init
-        followingCount = Integer.parseInt(xml.followingCount.getText().toString());
-        addUsers();
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        fetchData();
+
+        //initializing the following text
+        xml.followingCount.setText(String.valueOf(followingCount));
 
         //vertical Recyclerview
         xml.profilesRecyclerView.setLayoutManager(
@@ -43,13 +49,14 @@ public class HomeActivity extends AppCompatActivity {
 
             UserAdapter userAdapter = new UserAdapter(this, userList, new UserAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(boolean bool) {
-
+                public void onItemClick(boolean bool, int position) {
                     if(bool){
                         followingCount++;
+                        updateUser(position);
                     }
                     else{
                         followingCount--;
+                        updateUser(position);
                     }
 
                     //update following text count
@@ -62,18 +69,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void addUsers(){
-        List<String> nameList = new ArrayList<>(List.of(
-                "Emma", "Liam", "Olivia", "Noah", "Ava", "Isabella", "Sophia", "Jackson", "Aiden", "Lucas",
-                "Oliver", "Caden", "Ethan", "Michael", "Elizabeth", "Mia", "Charlotte", "Abigail", "Camila", "Emily",
-                "Grace", "Madison", "Avery", "Sofia", "Scarlett", "James", "Benjamin", "Henry", "Alexander", "Sebastian",
-                "Elijah", "David", "William", "Joseph", "Matthew", "Samuel", "Daniel", "Jackson", "Logan", "Liam", "Mason",
-                "John", "David", "James", "Oliver", "Joseph", "Michael", "Thomas", "William"
-        ));
+    private void fetchData(){
+        userList = userViewModel.getAllUsers();
+        followingCount = userViewModel.getFollowedUserCount() + 100;
+    }
 
-        for (String name : nameList) {
-            userList.add(new User(name));
-        }
+    private void updateUser(int position){
+        userViewModel.updateUser(userList.get(position));
     }
 
     private void showProgressBar(){
